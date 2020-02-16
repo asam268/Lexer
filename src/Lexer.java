@@ -1,4 +1,5 @@
-// Translated from python source
+//TODO: Lexer must recognize comments
+//TODO: Lexer must recognize '^'
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,7 +44,7 @@ public class Lexer {
     }
 
     static enum TokenType {
-        End_of_input, Op_multiply,  Op_divide, Op_mod, Op_add, Op_subtract,
+        End_of_input, Op_exponent, Op_multiply,  Op_divide, Op_mod, Op_add, Op_subtract,
         Op_negate, Op_not, Op_less, Op_lessequal, Op_greater, Op_greaterequal,
         Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if,
         Keyword_else, Keyword_while, Keyword_print, Keyword_putc, LeftParen, RightParen,
@@ -120,7 +121,7 @@ public class Lexer {
     }
 
     Token div_or_comment(int line, int pos) {
-        if (getNextChar() != '*') {
+        if (getNextChar() != '*' || getNextChar() != '/') {
             return new Token(TokenType.Op_divide, "", line, pos);
         }
         getNextChar();
@@ -191,6 +192,7 @@ public class Lexer {
             case ')': getNextChar(); return new Token(TokenType.RightParen, "", line, pos);
             case '[': getNextChar(); return new Token(TokenType.LeftBracket, "", line, pos);
             case ']': getNextChar(); return new Token(TokenType.RightBracket, "", line, pos);
+            case '^': getNextChar(); return new Token(TokenType.Op_exponent, "", line, pos);
             case '+': getNextChar(); return new Token(TokenType.Op_add, "", line, pos);
             case '-': getNextChar(); return new Token(TokenType.Op_subtract, "", line, pos);
             case '*': getNextChar(); return new Token(TokenType.Op_multiply, "", line, pos);
