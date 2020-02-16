@@ -47,7 +47,7 @@ public class Lexer {
         Op_negate, Op_not, Op_less, Op_lessequal, Op_greater, Op_greaterequal,
         Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if,
         Keyword_else, Keyword_while, Keyword_print, Keyword_putc, LeftParen, RightParen,
-        LeftBrace, RightBrace, Semicolon, Comma, Identifier, Integer, String
+        LeftBrace, RightBrace, LeftBracket, RightBracket, Semicolon, Comma, Identifier, Integer, String
     }
 
     static void error(int line, int pos, String msg) {
@@ -189,6 +189,8 @@ public class Lexer {
             case '}': getNextChar(); return new Token(TokenType.RightBrace, "", line, pos);
             case '(': getNextChar(); return new Token(TokenType.LeftParen, "", line, pos);
             case ')': getNextChar(); return new Token(TokenType.RightParen, "", line, pos);
+            case '[': getNextChar(); return new Token(TokenType.LeftBracket, "", line, pos);
+            case ']': getNextChar(); return new Token(TokenType.RightBracket, "", line, pos);
             case '+': getNextChar(); return new Token(TokenType.Op_add, "", line, pos);
             case '-': getNextChar(); return new Token(TokenType.Op_subtract, "", line, pos);
             case '*': getNextChar(); return new Token(TokenType.Op_multiply, "", line, pos);
