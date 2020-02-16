@@ -1,4 +1,5 @@
-// Translated from python source
+//TODO: Lexer must recognize comments
+//TODO: Lexer must recognize '^'
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,11 +44,11 @@ public class Lexer {
     }
 
     static enum TokenType {
-        End_of_input, Op_multiply,  Op_divide, Op_mod, Op_add, Op_subtract,
+        End_of_input, Op_exponent, Op_multiply,  Op_divide, Op_mod, Op_add, Op_subtract,
         Op_negate, Op_not, Op_less, Op_lessequal, Op_greater, Op_greaterequal,
-        Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if,
-        Keyword_else, Keyword_while, Keyword_print, Keyword_putc, LeftParen, RightParen,
-        LeftBrace, RightBrace, Semicolon, Comma, Identifier, Integer, String
+        Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if, Keyword_then, Keyword_endif,
+        Keyword_else, Keyword_do, Keyword_while, Keyword_endwhile, Keyword_for, Keyword_endfor, Keyword_print, Keyword_putc, Keyword_endfun, LeftParen,
+        RightParen, LeftBrace, RightBrace, LeftBracket, RightBracket, Semicolon, Comma, Identifier, Integer, String
     }
 
     static void error(int line, int pos, String msg) {
@@ -66,10 +67,17 @@ public class Lexer {
         this.s = source;
         this.chr = this.s.charAt(0);
         this.keywords.put("if", TokenType.Keyword_if);
+        this.keywords.put("then", TokenType.Keyword_then);
+        this.keywords.put("endif", TokenType.Keyword_endif);
         this.keywords.put("else", TokenType.Keyword_else);
         this.keywords.put("print", TokenType.Keyword_print);
         this.keywords.put("putc", TokenType.Keyword_putc);
+        this.keywords.put("do", TokenType.Keyword_do);
         this.keywords.put("while", TokenType.Keyword_while);
+        this.keywords.put("endwhile", TokenType.Keyword_endwhile);
+        this.keywords.put("for", TokenType.Keyword_for);
+        this.keywords.put("endfor", TokenType.Keyword_endfor);
+        this.keywords.put("endfun", TokenType.Keyword_endfun);
 
     }
     Token follow(char expect, TokenType ifyes, TokenType ifno, int line, int pos) {
@@ -132,7 +140,8 @@ public class Lexer {
                     getNextChar();
                     return getToken();
                 }
-            } else {
+            }
+            else {
                 getNextChar();
             }
         }
@@ -141,7 +150,7 @@ public class Lexer {
         boolean is_number = true;
         String text = "";
 
-        while (Character.isAlphabetic(this.chr) || Character.isDigit(this.chr) || this.chr == '_') {
+        while (Character.isAlphabetic(this.chr) || Character.isDigit(this.chr) || this.chr == '_' || this.chr == '#') {
             text += this.chr;
             if (!Character.isDigit(this.chr)) {
                 is_number = false;
@@ -150,12 +159,12 @@ public class Lexer {
         }
 
         if (text.equals("")) {
-            error(line, pos, String.format("identifer_or_integer unrecopgnized character: (%d) %c", (int)this.chr, this.chr));
+            error(line, pos, String.format("identifier_or_integer unrecognized character: (%d) %c", (int)this.chr, this.chr));
         }
 
         if (Character.isDigit(text.charAt(0))) {
             if (!is_number) {
-                error(line, pos, String.format("invaslid number: %s", text));
+                error(line, pos, String.format("invalid number: %s", text));
             }
             return new Token(TokenType.Integer, text, line, pos);
         }
@@ -179,15 +188,19 @@ public class Lexer {
             case '\'': return char_lit(line, pos);
             case '<': return follow('=', TokenType.Op_lessequal, TokenType.Op_less, line, pos);
             case '>': return follow('=', TokenType.Op_greaterequal, TokenType.Op_greater, line, pos);
-            case '=': return follow('=', TokenType.Op_equal, TokenType.Op_assign, line, pos);
+            case ':': return follow('=', TokenType.Op_assign, TokenType.End_of_input, line, pos);
+            case '=': getNextChar(); return new Token(TokenType.Op_equal, "", line, pos);
             case '!': return follow('=', TokenType.Op_notequal, TokenType.Op_not, line, pos);
             case '&': return follow('&', TokenType.Op_and, TokenType.End_of_input, line, pos);
             case '|': return follow('|', TokenType.Op_or, TokenType.End_of_input, line, pos);
             case '"': return string_lit(this.chr, line, pos);
-            case '{': getNextChar(); return new Token(TokenType.LeftBrace, "", line, pos);
-            case '}': getNextChar(); return new Token(TokenType.RightBrace, "", line, pos);
+            //case '{': getNextChar(); return new Token(TokenType.LeftBrace, "", line, pos);
+            //case '}': getNextChar(); return new Token(TokenType.RightBrace, "", line, pos);
             case '(': getNextChar(); return new Token(TokenType.LeftParen, "", line, pos);
             case ')': getNextChar(); return new Token(TokenType.RightParen, "", line, pos);
+            case '[': getNextChar(); return new Token(TokenType.LeftBracket, "", line, pos);
+            case ']': getNextChar(); return new Token(TokenType.RightBracket, "", line, pos);
+            case '^': getNextChar(); return new Token(TokenType.Op_exponent, "", line, pos);
             case '+': getNextChar(); return new Token(TokenType.Op_add, "", line, pos);
             case '-': getNextChar(); return new Token(TokenType.Op_subtract, "", line, pos);
             case '*': getNextChar(); return new Token(TokenType.Op_multiply, "", line, pos);
