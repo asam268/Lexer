@@ -46,7 +46,7 @@ public class Lexer {
     static enum TokenType {
         End_of_input, Op_exponent, Op_multiply,  Op_divide, Op_mod, Op_add, Op_subtract,
         Op_negate, Op_not, Op_less, Op_lessequal, Op_greater, Op_greaterequal,
-        Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if,
+        Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if, Keyword_then, Keyword_endif,
         Keyword_else, Keyword_while, Keyword_print, Keyword_putc, LeftParen, RightParen,
         LeftBrace, RightBrace, LeftBracket, RightBracket, Semicolon, Comma, Identifier, Integer, String
     }
@@ -67,6 +67,8 @@ public class Lexer {
         this.s = source;
         this.chr = this.s.charAt(0);
         this.keywords.put("if", TokenType.Keyword_if);
+        this.keywords.put("then", TokenType.Keyword_then);
+        this.keywords.put("endif", TokenType.Keyword_endif);
         this.keywords.put("else", TokenType.Keyword_else);
         this.keywords.put("print", TokenType.Keyword_print);
         this.keywords.put("putc", TokenType.Keyword_putc);
@@ -121,7 +123,7 @@ public class Lexer {
     }
 
     Token div_or_comment(int line, int pos) {
-        if (getNextChar() != '*' || getNextChar() != '/') {
+        if (getNextChar() != '*') {
             return new Token(TokenType.Op_divide, "", line, pos);
         }
         getNextChar();
