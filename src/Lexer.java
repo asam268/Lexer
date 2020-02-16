@@ -194,8 +194,8 @@ public class Lexer {
             case '&': return follow('&', TokenType.Op_and, TokenType.End_of_input, line, pos);
             case '|': return follow('|', TokenType.Op_or, TokenType.End_of_input, line, pos);
             case '"': return string_lit(this.chr, line, pos);
-            case '{': getNextChar(); return new Token(TokenType.LeftBrace, "", line, pos);
-            case '}': getNextChar(); return new Token(TokenType.RightBrace, "", line, pos);
+            //case '{': getNextChar(); return new Token(TokenType.LeftBrace, "", line, pos);
+            //case '}': getNextChar(); return new Token(TokenType.RightBrace, "", line, pos);
             case '(': getNextChar(); return new Token(TokenType.LeftParen, "", line, pos);
             case ')': getNextChar(); return new Token(TokenType.RightParen, "", line, pos);
             case '[': getNextChar(); return new Token(TokenType.LeftBracket, "", line, pos);
