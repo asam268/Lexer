@@ -331,7 +331,7 @@ public class Lexer {
                 }
                 Lexer l = new Lexer(source);
                 l.printTokens(args[1]);
-//                FileWriter fw = new FileWriter(args[1]);
+                s.close();
             } catch(FileNotFoundException e) {
                 error(-1, -1, "Exception: " + e.getMessage());
             } catch (IOException e) {
