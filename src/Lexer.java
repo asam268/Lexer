@@ -1,5 +1,4 @@
 //TODO: Lexer must recognize comments
-//TODO: Lexer must recognize '^'
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,15 +15,27 @@ public class Lexer {
 
     Map<String, TokenType> keywords = new HashMap<>();
 
+    /**
+     * Sub-class Token contains information on each token including token type, value, line, and position. Token is also
+     * used to print output about each token.
+     */
     static class Token {
         public TokenType tokentype;
         public String value;
         public int line;
         public int pos;
 
+        /**
+         * Constructor for Token
+         * @param token token type
+         * @param value value of token
+         * @param line  line # in input
+         * @param pos   position on current line
+         */
         Token(TokenType token, String value, int line, int pos) {
             this.tokentype = token; this.value = value; this.line = line; this.pos = pos;
         }
+
         @Override
         public String toString() {
             String result = String.format("%5d  %5d %-15s", this.line, this.pos, this.tokentype);
@@ -43,12 +54,16 @@ public class Lexer {
         }
     }
 
-    static enum TokenType {
+    /**
+     *
+     */
+    enum TokenType {
         End_of_input, Op_exponent, Op_multiply,  Op_divide, Op_mod, Op_add, Op_subtract,
         Op_negate, Op_not, Op_less, Op_lessequal, Op_greater, Op_greaterequal,
         Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if, Keyword_then, Keyword_endif,
-        Keyword_else, Keyword_do, Keyword_while, Keyword_endwhile, Keyword_for, Keyword_endfor, Keyword_print, Keyword_putc, Keyword_endfun, LeftParen,
-        RightParen, LeftBrace, RightBrace, LeftBracket, RightBracket, Semicolon, Comma, Identifier, Integer, String
+        Keyword_else, Keyword_do, Keyword_while, Keyword_endwhile, Keyword_for, Keyword_endfor, Keyword_print,
+        Keyword_putc, Keyword_endfun, LeftParen, RightParen, LeftBrace, RightBrace, LeftBracket, RightBracket,
+        Semicolon, Comma, Identifier, Integer, String
     }
 
     static void error(int line, int pos, String msg) {
