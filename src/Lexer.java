@@ -133,7 +133,8 @@ public class Lexer {
                     getNextChar();
                     return getToken();
                 }
-            } else {
+            }
+            else {
                 getNextChar();
             }
         }
