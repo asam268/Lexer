@@ -55,7 +55,7 @@ public class Lexer {
     }
 
     /**
-     *
+     * Defines constants for different token types
      */
     enum TokenType {
         End_of_input, Op_exponent, Op_multiply,  Op_divide, Op_mod, Op_add, Op_subtract,
@@ -66,6 +66,12 @@ public class Lexer {
         Semicolon, Comma, Identifier, Integer, String
     }
 
+    /**
+     * Prints error message for unrecognized characters.
+     * @param line  line #
+     * @param pos   position in line
+     * @param msg   description of error
+     */
     static void error(int line, int pos, String msg) {
         if (line > 0 && pos > 0) {
             System.out.printf("%s in line %d, pos %d\n", msg, line, pos);
@@ -75,6 +81,10 @@ public class Lexer {
         System.exit(1);
     }
 
+    /**
+     * Constructor for Lexer.
+     * @param source    String containing code from input file
+     */
     Lexer(String source) {
         this.line = 1;
         this.pos = 0;
@@ -95,6 +105,16 @@ public class Lexer {
         this.keywords.put("endfun", TokenType.Keyword_endfun);
 
     }
+
+    /**
+     * Analyzes tokens with ambiguous behavior that is dependent on a trailing character.
+     * @param expect    expected next character
+     * @param ifyes     token type if next character is equal to expect
+     * @param ifno      token type if next character is not equal to expect
+     * @param line      line #
+     * @param pos       position in line
+     * @return          Token with token type determined by trailing character
+     */
     Token follow(char expect, TokenType ifyes, TokenType ifno, int line, int pos) {
         if (getNextChar() == expect) {
             getNextChar();
@@ -105,6 +125,13 @@ public class Lexer {
         }
         return new Token(ifno, "", line, pos);
     }
+
+    /**
+     * Handles behavior for single quotes
+     * @param line  line #
+     * @param pos   position in line
+     * @return      Integer Token or error if syntax is incorrect
+     */
     Token char_lit(int line, int pos) {
         char c = getNextChar(); // skip opening quote
         int n = (int)c;
@@ -127,6 +154,13 @@ public class Lexer {
         return new Token(TokenType.Integer, "" + n, line, pos);
     }
 
+    /**
+     * Handles behavior for double quotes
+     * @param start the beginning of the String literal
+     * @param line  line #
+     * @param pos   position in line
+     * @return      String Token or error if syntax is incorrect
+     */
     Token string_lit(char start, int line, int pos) {
         String result = "";
         while (getNextChar() != start) {
@@ -142,6 +176,12 @@ public class Lexer {
         return new Token(TokenType.String, result, line, pos);
     }
 
+    /**
+     * Analyzes the '/' character to see if it is a divide operator or comment.
+     * @param line  line #
+     * @param pos   position in line
+     * @return      Divide operator Token or getToken() if '/' indicates comment behavior
+     */
     Token div_or_comment(int line, int pos) {
         if (getNextChar() != '*') {
             return new Token(TokenType.Op_divide, "", line, pos);
@@ -161,6 +201,13 @@ public class Lexer {
             }
         }
     }
+
+    /**
+     * Determines the difference between identifiers and integers.
+     * @param line  line #
+     * @param pos   position in line
+     * @return      Integer Token or Identifier Token
+     */
     Token identifier_or_integer(int line, int pos) {
         boolean is_number = true;
         String text = "";
@@ -189,6 +236,11 @@ public class Lexer {
         }
         return new Token(TokenType.Identifier, text, line, pos);
     }
+
+    /**
+     * Calls appropriate methods to determine token type based on the value of the token using a switch.
+     * @return  Token
+     */
     Token getToken() {
         int line, pos;
         while (Character.isWhitespace(this.chr)) {
@@ -227,6 +279,10 @@ public class Lexer {
         }
     }
 
+    /**
+     * Gets the next character in the source code
+     * @return  the next character in the source code
+     */
     char getNextChar() {
         this.pos++;
         this.position++;
@@ -241,6 +297,10 @@ public class Lexer {
         }
         return this.chr;
     }
+
+    /**
+     * Outputs information for each token
+     */
     void printTokens() {
         Token t;
         while ((t = getToken()).tokentype != TokenType.End_of_input) {
@@ -248,6 +308,11 @@ public class Lexer {
         }
         System.out.println(t);
     }
+
+    /**
+     * Drives code.
+     * @param args  Path to input file
+     */
     public static void main(String[] args) {
             try {
                 File f = new File("input.txt");
