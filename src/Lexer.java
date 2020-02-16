@@ -47,8 +47,8 @@ public class Lexer {
         End_of_input, Op_exponent, Op_multiply,  Op_divide, Op_mod, Op_add, Op_subtract,
         Op_negate, Op_not, Op_less, Op_lessequal, Op_greater, Op_greaterequal,
         Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if, Keyword_then, Keyword_endif,
-        Keyword_else, Keyword_while, Keyword_print, Keyword_putc, LeftParen, RightParen,
-        LeftBrace, RightBrace, LeftBracket, RightBracket, Semicolon, Comma, Identifier, Integer, String
+        Keyword_else, Keyword_do, Keyword_while, Keyword_endwhile, Keyword_for, Keyword_endfor, Keyword_print, Keyword_putc, Keyword_endfun, LeftParen,
+        RightParen, LeftBrace, RightBrace, LeftBracket, RightBracket, Semicolon, Comma, Identifier, Integer, String
     }
 
     static void error(int line, int pos, String msg) {
@@ -72,7 +72,12 @@ public class Lexer {
         this.keywords.put("else", TokenType.Keyword_else);
         this.keywords.put("print", TokenType.Keyword_print);
         this.keywords.put("putc", TokenType.Keyword_putc);
+        this.keywords.put("do", TokenType.Keyword_do);
         this.keywords.put("while", TokenType.Keyword_while);
+        this.keywords.put("endwhile", TokenType.Keyword_endwhile);
+        this.keywords.put("for", TokenType.Keyword_for);
+        this.keywords.put("endfor", TokenType.Keyword_endfor);
+        this.keywords.put("endfun", TokenType.Keyword_endfun);
 
     }
     Token follow(char expect, TokenType ifyes, TokenType ifno, int line, int pos) {
