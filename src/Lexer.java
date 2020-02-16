@@ -64,7 +64,7 @@ public class Lexer {
         Op_negate, Op_not, Op_less, Op_lessequal, Op_greater, Op_greaterequal,
         Op_equal, Op_notequal, Op_assign, Op_and, Op_or, Keyword_if, Keyword_then, Keyword_endif,
         Keyword_else, Keyword_do, Keyword_while, Keyword_endwhile, Keyword_for, Keyword_endfor, Keyword_print,
-        Keyword_putc, Keyword_endfun, LeftParen, RightParen, LeftBrace, RightBrace, LeftBracket, RightBracket,
+        Keyword_putc, Keyword_endfun, LeftParen, RightParen, LeftBracket, RightBracket,
         Semicolon, Comma, Identifier, Integer, String
     }
 
