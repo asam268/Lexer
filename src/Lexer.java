@@ -141,7 +141,7 @@ public class Lexer {
         boolean is_number = true;
         String text = "";
 
-        while (Character.isAlphabetic(this.chr) || Character.isDigit(this.chr) || this.chr == '_') {
+        while (Character.isAlphabetic(this.chr) || Character.isDigit(this.chr) || this.chr == '_' || this.chr == '#') {
             text += this.chr;
             if (!Character.isDigit(this.chr)) {
                 is_number = false;
@@ -150,12 +150,12 @@ public class Lexer {
         }
 
         if (text.equals("")) {
-            error(line, pos, String.format("identifer_or_integer unrecopgnized character: (%d) %c", (int)this.chr, this.chr));
+            error(line, pos, String.format("identifier_or_integer unrecognized character: (%d) %c", (int)this.chr, this.chr));
         }
 
         if (Character.isDigit(text.charAt(0))) {
             if (!is_number) {
-                error(line, pos, String.format("invaslid number: %s", text));
+                error(line, pos, String.format("invalid number: %s", text));
             }
             return new Token(TokenType.Integer, text, line, pos);
         }
