@@ -1,5 +1,15 @@
+/*
+ * Author: Asa Marshall, Chukwufunayan Ojiagbaje, James Bozhkov
+ * Class: CS 4308 W01
+ * School: Kennesaw State University
+ * Professor: Dr. Jose Garrido
+ * Date: February 16, 2020
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -291,30 +301,41 @@ public class Lexer {
     /**
      * Outputs information for each token
      */
-    void printTokens() {
+    void printTokens(String path) throws IOException{
         Token t;
+//        while ((t = getToken()).tokentype != TokenType.End_of_input) {
+//            System.out.println(t);
+//        }
+//        System.out.println(t);
+        FileWriter fw = new FileWriter(path);
         while ((t = getToken()).tokentype != TokenType.End_of_input) {
-            System.out.println(t);
+            fw.write(t.toString());
+            fw.write(System.lineSeparator());
         }
-        System.out.println(t);
+        fw.write(t.toString());
+        fw.close();
     }
 
     /**
      * Drives code.
-     * @param args  Path to input file
+     * @param args  [0] Path to input file
+     *              [1] Path to output file
      */
     public static void main(String[] args) {
             try {
-                File f = new File("input.txt");
+                File f = new File(args[0]);
                 Scanner s = new Scanner(f);
                 String source = " ";
                 while (s.hasNext()) {
                     source += s.nextLine() + "\n";
                 }
                 Lexer l = new Lexer(source);
-                l.printTokens();
+                l.printTokens(args[1]);
+//                FileWriter fw = new FileWriter(args[1]);
             } catch(FileNotFoundException e) {
                 error(-1, -1, "Exception: " + e.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
     }
 }
